@@ -1,0 +1,7 @@
+export const buildQuery = (params) => {
+    if (!params) {
+        return '';
+    }
+
+    return Object.keys(params).map(key => key + '=' + params[key]).join('&');
+}

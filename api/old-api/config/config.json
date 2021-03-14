@@ -1,0 +1,11 @@
+{
+  "ConfigVersion": "1.0",
+  "MikeSerialNum": "123456XY",
+  "Timezone": "-05:00",
+  "locationNumber": 2222,
+  "franchiseNumber": 1,
+  "storeNumber": 5672,
+  "storeId": 5672,
+  "portalId": 1,
+  "CVPath": "localhost:1880/cv"
+}

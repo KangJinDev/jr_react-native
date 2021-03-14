@@ -1,0 +1,49 @@
+{
+  "name": "react-jr-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "knex": "knex",
+    "migrate": "knex migrate:latest",
+    "seed": "knex seed:run",
+    "start": "babel-node app.js",
+    "dev": "nodemon --exec babel-node app.js",
+    "ci": "yarn install --frozen-lockfile"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:kjanoudi/react-jr-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/node": "^7.12.10",
+    "@babel/plugin-proposal-object-rest-spread": "^7.12.1",
+    "@babel/plugin-transform-async-to-generator": "^7.12.1",
+    "@babel/plugin-transform-runtime": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/preset-react": "^7.12.10",
+    "axios": "^0.21.1",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "cron": "^1.8.2",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "nconf": "^0.11.1",
+    "nodemon": "^2.0.7",
+    "objection": "^2.2.4",
+    "sqlite3": "^5.0.0"
+  },
+  "dependencies": {
+    "express-pino-logger": "^6.0.0",
+    "http-proxy": "^1.18.1",
+    "knex": "^0.21.17",
+    "lodash": "^4.17.20",
+    "luxon": "^1.25.0",
+    "moment": "^2.29.1",
+    "paths.macro": "^3.0.1",
+    "pino": "^6.11.0"
+  }
+}

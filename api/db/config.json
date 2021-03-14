@@ -1,0 +1,13 @@
+{
+  "ConfigVersion": 1234,
+  "MikeSerialNum": "2345",
+  "Timezone": -5,
+  "locationNumber": 1234,
+  "franchiseNumber": 1234,
+  "storeNumber": 1234,
+  "storeId": 1234,
+  "portalId": 1234,
+  "plcnextPassword": "5bd1c9bc",
+  "dataRetentionDays": 5367,
+  "CVLogLevel": 1026
+}

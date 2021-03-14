@@ -1,0 +1,70 @@
+trigger:
+- main
+
+variables:
+  tag: '$(Build.BuildId)'
+  docker_registry: 'prodcusmikeacrstaging'
+  docker_registry_domain: 'prodcusmikeacrstaging.azurecr.io'
+  device_type: 'mike-comfilepi-v1'
+  artifact_name: 'mike-hmi'
+  self_repo_name: MIKE-HMI
+  mike_repo_name: MIKE
+  DECODE_PERCENTS: true
+
+pool:
+  vmImage: 'ubuntu-20.04'
+
+steps:
+- checkout: self
+- checkout: git://MIKE/MIKE@master
+
+- task: CmdLine@2
+  displayName: Create .env file
+  inputs:
+    script: |
+      touch .env
+      echo "NODE_ENV=$(NODE_ENV)" >> .env
+      echo "REACT_APP_API=$(REACT_APP_API)" >> .env
+      echo "REACT_APP_USER_TOKEN_KEY=$(REACT_APP_USER_TOKEN_KEY)" >> .env
+      echo "REACT_APP_PLCNEXT_EHMI_URL=$(REACT_APP_PLCNEXT_EHMI_URL)" >> .env
+      mv .env "$(self_repo_name)"
+
+- task: CmdLine@2
+  displayName: QEMU - Multiarch support
+  inputs:
+    script: |
+      docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+      sudo apt-get update && sudo apt-get install qemu binfmt-support qemu-user-static
+
+- task: Docker@2
+  displayName: Login to Docker registry
+  inputs:
+    command: 'login'
+    containerRegistry: '$(docker_registry)'
+
+- task: Docker@2
+  displayName: Build an image
+  inputs:
+    containerRegistry: '$(docker_registry)'
+    repository: '$(docker_registry)/$(artifact_name)'
+    command: 'buildAndPush'
+    Dockerfile: '$(self_repo_name)/Dockerfile'
+    tags: '$(tag)'
+
+- task: CmdLine@2
+  displayName: Generate Mender Artifact
+  inputs:
+    script: |
+      export PATH="$PATH:$(pwd)/$(mike_repo_name)/mender:$(pwd)/$(mike_repo_name)/mender/modules-artifact-gen"
+      mike-docker-artifact-gen \
+      -n "$(artifact_name)-$(tag)" \
+      -t "$(device_type)" \
+      -o "$(artifact_name)-$(tag).mender" \
+      -i "$(docker_registry_domain)/$(docker_registry)/$(artifact_name):$(tag)" \
+      -p "-p 80:80 --restart unless-stopped"
+
+- task: PublishPipelineArtifact@1
+  displayName: Publish Mender Artifact
+  inputs:
+    targetPath: '$(System.DefaultWorkingDirectory)/$(artifact_name)-$(tag).mender'
+    artifactName: '$(artifact_name)'
